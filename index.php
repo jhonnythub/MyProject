@@ -7,6 +7,9 @@ if( isset($_SESSION["register"]) ){
 
 require "functions.php";
 $lists = query("SELECT * FROM list");
+if( !$lists ){
+    $kosong = "Data Masih Kosong";
+}
 
 ?>
 <!DOCTYPE html>
@@ -89,6 +92,12 @@ $lists = query("SELECT * FROM list");
         <!-- Section-->
         <section class="py-5">
             <div class="container px-4 px-lg-5 mt-5">
+<?php if( isset($kosong) ){ ?>
+    <div class="text-center mb-5 card p-5 bg-secondary text-white fw-bolder">
+        <h1 class="mb-5 fw-bolder"><i class="bi bi-folder-x"></i></h1>
+        <h1><?= $kosong; ?></h1>
+    </div>
+<?php } ?>
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 <?php foreach( $lists as $list ) : ?>
                     <div class="col mb-5">
@@ -242,7 +251,7 @@ $lists = query("SELECT * FROM list");
                             <option value="VIVO">VIVO</option>
                             <option value="Xiaomi">Xiaomi</option>
                         </select>
-                        <input type="text" name="harga" class="form-control mb-3" placeholder="Rp. 000000" id="inputku" onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);"/>
+                        <input type="text" name="harga" class="form-control mb-3" placeholder="Rp. 000000" id="inputku" onkeydown="return numbersonly(this, event);" onkeyup="javascript:tandaPemisahTitik(this);" required/>
                         <div class="text-center">
                             <input type="file" class="form-control border border-primary" name="gambar" accept='image/*' onchange='readURL(event)' required/>
                             <img id="output" class="mt-5" width="450"/>
@@ -355,7 +364,9 @@ if( isset($_POST["daftar"]) ){
 
 if( isset($_POST["add"]) ){
     if( tambah($_POST) > 0 ){
-        echo "<script>swal('Data Berhasil ditambahkan','Terimakasih!','success');</script>";
+        echo "<script>swal('Data Berhasil ditambahkan','Terimakasih!','success').then(function(){
+            window.location.href = '/myproject/';
+        });</script>";
     }else{
         echo "<script>swal('Gagal mengunggah data','Perikasa Lagi!','warning');</script>";
     }

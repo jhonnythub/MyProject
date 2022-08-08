@@ -1,6 +1,7 @@
 <?php
 
-$conn = mysqli_connect("sql6.freemysqlhosting.net","sql6510942","s6fNQlZyWP","sql6510942");
+//$conn = mysqli_connect("sql6.freemysqlhosting.net","sql6510942","s6fNQlZyWP","sql6510942");
+$conn = mysqli_connect("localhost","root","","myproject");
 
 function register($data){
 global $conn;
