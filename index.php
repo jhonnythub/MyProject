@@ -6,7 +6,13 @@ if( isset($_SESSION["register"]) ){
 }
 
 require "functions.php";
-$lists = query("SELECT * FROM list");
+if( isset($_GET["kategori"]) ){
+    $kategori = $_GET["kategori"];
+    $lists = query("SELECT * FROM list WHERE Kategori = '$kategori'");
+}else{
+    $lists = query("SELECT * FROM list");
+}
+
 if( !$lists ){
     $kosong = "Data Masih Kosong";
 }
@@ -46,15 +52,15 @@ if( !$lists ){
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Category</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item active" href="#!">All Category</a></li>
+                                <li><a class="dropdown-item active" href="/myproject/">All Category</a></li>
                                 <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="#!">ASUS</a></li>
-                                <li><a class="dropdown-item" href="#!">INFINIX</a></li>
-                                <li><a class="dropdown-item" href="#!">OPPO</a></li>
-                                <li><a class="dropdown-item" href="#!">Realme</a></li>
-                                <li><a class="dropdown-item" href="#!">SAMSUNG</a></li>
-                                <li><a class="dropdown-item" href="#!">VIVO</a></li>
-                                <li><a class="dropdown-item" href="#!">Xiaomi</a></li>
+                                <li><a class="dropdown-item" href="?kategori=ASUS">ASUS</a></li>
+                                <li><a class="dropdown-item" href="?kategori=INFINIX">INFINIX</a></li>
+                                <li><a class="dropdown-item" href="?kategori=OPPO">OPPO</a></li>
+                                <li><a class="dropdown-item" href="?kategori=Realme">Realme</a></li>
+                                <li><a class="dropdown-item" href="?kategori=SAMSUNG">SAMSUNG</a></li>
+                                <li><a class="dropdown-item" href="?kategori=VIVO">VIVO</a></li>
+                                <li><a class="dropdown-item" href="?kategori=Xiaomi">Xiaomi</a></li>
                             </ul>
                         </li>
                         <li class="nav-item"><a class="nav-link" href="#" data-bs-target="#about" data-bs-toggle="modal">About</a></li>
@@ -103,14 +109,15 @@ if( !$lists ){
                     <div class="col mb-5">
                         <div class="card h-100">
                             <!-- Product image-->
-                            <img class="card-img-top" src="assets/img/list/<?= $list["Gambar"]; ?>" alt="..."/>
+                            <img class="card-img-top" src="assets/img/list/<?= $list["Gambar"]; ?>" alt="..." height="300"/>
                             <!-- Product details-->
                             <div class="card-body p-4">
                                 <div class="text-center">
                                     <!-- Product name-->
                                     <h5 class="fw-bolder"><?= $list["Type"]?></h5>
-                                    <!-- Product price-->
+                                <?php if( isset($_SESSION["login"]) ){ ?>
                                     Rp. <?= $list["Harga"]; ?>
+                                <?php } ?>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-center small text-warning mb-2">
@@ -122,10 +129,31 @@ if( !$lists ){
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" data-bs-target="#view<?= $list["ID"]; ?>" data-bs-toggle="modal">View options</a></div>
                             </div>
                         </div>
                     </div>
+        <div class="modal fade" id="view<?= $list["ID"]; ?>" tabindex="-1" aria-labelledby="view" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="search">Options</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <img src="assets/img/list/<?= $list["Gambar"]; ?>" class="img-top" alt="<?= $list["Gambar"]; ?>" height="300"/>
+                        <h3><?= $list["Type"]; ?></h3>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary">Cari <i class="bi bi-search"></i></button>
+                    </form>
+                </div>
+                </div>
+            </div>
+        </div>
 <?php endforeach; ?>
                 </div>
             </div>
@@ -315,6 +343,7 @@ if( !$lists ){
                                 </div>
                             </div>
                         </div>
+                        Jika Anda seorang Admin maka anda akan bisa Mengubah, Mengupdate dan Mendelete. Tapi, Jika anda seorang User biasa maka anda hanya bisa berapresiasi sebagai pemberi bintang terhadap data.
                     </div>
                 </div>
             </div>
