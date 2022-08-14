@@ -29,13 +29,25 @@ if( !$lists ){
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
-    <script>
-        if (window.history.replaceState) {
-            window.history.replaceState(null, null, window.location.href);
-        }
-    </script>
+        <script>
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.href);
+            }
+        </script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    
+        <style>
+            .start:hover{
+                unicode-bidi: bidi-override;
+                direction: rtl;
+            }
+            .start > i:hover:before,
+            .start > i:hover ~ i:before {
+                content: "start";
+                position: relative;
+                color: gold;
+            }
+
+        </style>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -45,22 +57,22 @@ if( !$lists ){
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                         <li class="nav-item">
-                            <a class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#search">
+                            <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#search1">
                                 <i class="bi bi-search"></i> <span class="badge bg-dark text-white ms-1 rounded-pill">Search</span>
-                            </a>
+                            </button>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Category</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item active" href="/myproject/">All Category</a></li>
+                                <li><a class="dropdown-item <?php if(!isset($_GET["kategori"])){ echo "active"; } ?>" href="/myproject/">All Category</a></li>
                                 <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="?kategori=ASUS">ASUS</a></li>
-                                <li><a class="dropdown-item" href="?kategori=INFINIX">INFINIX</a></li>
-                                <li><a class="dropdown-item" href="?kategori=OPPO">OPPO</a></li>
-                                <li><a class="dropdown-item" href="?kategori=Realme">Realme</a></li>
-                                <li><a class="dropdown-item" href="?kategori=SAMSUNG">SAMSUNG</a></li>
-                                <li><a class="dropdown-item" href="?kategori=VIVO">VIVO</a></li>
-                                <li><a class="dropdown-item" href="?kategori=Xiaomi">Xiaomi</a></li>
+                                <li><a class="dropdown-item <?php if( isset($_GET["kategori"]) ){ if( $_GET["kategori"] === "ASUS" ){ echo "active"; } } ?>" href="?kategori=ASUS">ASUS</a></li>
+                                <li><a class="dropdown-item <?php if( isset($_GET["kategori"]) ){ if( $_GET["kategori"] === "INFINIX" ){ echo "active"; } } ?>" href="?kategori=INFINIX">INFINIX</a></li>
+                                <li><a class="dropdown-item <?php if( isset($_GET["kategori"]) ){ if( $_GET["kategori"] === "OPPO" ){ echo "active"; } } ?>" href="?kategori=OPPO">OPPO</a></li>
+                                <li><a class="dropdown-item <?php if( isset($_GET["kategori"]) ){ if( $_GET["kategori"] === "Realme" ){ echo "active"; } } ?>" href="?kategori=Realme">Realme</a></li>
+                                <li><a class="dropdown-item <?php if( isset($_GET["kategori"]) ){ if( $_GET["kategori"] === "SAMSUNG" ){ echo "active"; } } ?>" href="?kategori=SAMSUNG">SAMSUNG</a></li>
+                                <li><a class="dropdown-item <?php if( isset($_GET["kategori"]) ){ if( $_GET["kategori"] === "VIVO" ){ echo "active"; } } ?>" href="?kategori=VIVO">VIVO</a></li>
+                                <li><a class="dropdown-item <?php if( isset($_GET["kategori"]) ){ if( $_GET["kategori"] === "Xiaomi" ){ echo "active"; } } ?>" href="?kategori=Xiaomi">Xiaomi</a></li>
                             </ul>
                         </li>
                         <li class="nav-item"><a class="nav-link" href="#" data-bs-target="#about" data-bs-toggle="modal">About</a></li>
@@ -96,7 +108,7 @@ if( !$lists ){
             </div>
         </header>
         <!-- Section-->
-        <section class="py-5">
+        <section class="py-5" id="list">
             <div class="container px-4 px-lg-5 mt-5">
 <?php if( isset($kosong) ){ ?>
     <div class="text-center mb-5 card p-5 bg-secondary text-white fw-bolder">
@@ -129,7 +141,7 @@ if( !$lists ){
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" data-bs-target="#view<?= $list["ID"]; ?>" data-bs-toggle="modal">View options</a></div>
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" data-bs-target="#view<?= $list["ID"]; ?>" data-bs-toggle="modal">Beri Ratting</a></div>
                             </div>
                         </div>
                     </div>
@@ -142,14 +154,17 @@ if( !$lists ){
                 </div>
                 <div class="modal-body">
                     <div class="text-center">
-                        <img src="assets/img/list/<?= $list["Gambar"]; ?>" class="img-top" alt="<?= $list["Gambar"]; ?>" height="300"/>
-                        <h3><?= $list["Type"]; ?></h3>
+                        <img src="assets/img/list/<?= $list["Gambar"]; ?>" class="img-top mb-3" alt="<?= $list["Gambar"]; ?>" height="300"/>
+                        <h3><?= $list["Type"]; ?></h3><hr/>
+                        <div class="border border-warning rounded start text-secondary mt-5">
+                            <a href="" class="text-warning"><i class="bi bi-star-fill"></i></a>
+                            <a href="" class="text-warning"><i class="bi bi-star-fill"></i></a>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <h3 class="text-warning">Beri ratting</h3>
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-primary">Cari <i class="bi bi-search"></i></button>
-                    </form>
                 </div>
                 </div>
             </div>
@@ -162,7 +177,7 @@ if( !$lists ){
             <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Jhonny Iskandar 2022</p></div>
         </footer>
 
-        <div class="modal fade" id="search" tabindex="-1" aria-labelledby="search" aria-hidden="true">
+        <div class="modal fade" id="search1" tabindex="-1" aria-labelledby="search" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                 <div class="modal-header">
@@ -171,11 +186,11 @@ if( !$lists ){
                 </div>
                 <div class="modal-body">
                     <form action="" method="POST">
-                        <input type="text" name="inputKeyword" class="form-control" placeholder="Masukan Type untuk mencari" required="" />
+                        <input type="text" name="inputKeyword" class="form-control" placeholder="Masukan Type untuk mencari" required="" id="keywoard"/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-primary">Cari <i class="bi bi-search"></i></button>
+                    <button type="button" class="btn btn-primary" id="cari">Cari <i class="bi bi-search"></i></button>
                     </form>
                 </div>
                 </div>
@@ -371,7 +386,10 @@ if( isset($_POST["login"]) ){
                 date_default_timezone_set('Asia/Jakarta'); $date = date("Y-m-d H:i:s");
                 mysqli_query($conn, "UPDATE log_user SET lastLog = '$date' WHERE Username = '$username'");
                 $_SESSION["id"] = $nama["ID"]; $_SESSION["nama"] = $nama["Nama"]; $_SESSION["AS"] = $nama["setAs"]; $_SESSION["login"] = true;
-                echo "<script>window.location.href = '/myproject';</script>";
+                echo "<script>swal('Login berhasil dilakukan','berhasil','success').then(function(){
+                    window.location.href = '/myproject';
+                });
+                </script>";
             }
         }else{
             echo "<script>swal('Password Salah','Silahkan Periksa kembali', 'warning');</script>";
@@ -403,9 +421,11 @@ if( isset($_POST["add"]) ){
 
 ?>
 
+        <script src="js/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="js/scripts.js"></script>
         <script src="js/my.js"></script>
+        <script src="js/myscript.js"></script>
 <script>
   var readURL= function(event) {
     var input = event.target;
