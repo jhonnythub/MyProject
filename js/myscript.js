@@ -1,23 +1,39 @@
-$(document).ready(function() {
-    // hilangkan tombol cari
+$(document).ready(function()
+{
     $('#cari').hide();
-
-    // event ketika keyword ditulis
-    $('#keywoard').on('keyup', function() {
-        // munculkan icon loading
-        $('.loader').show();
-
-        // ajax menggunakan load
-        // $('#container').load('ajax/mahasiswa.php?keyword=' + $('#keyword').val());
-
-        // $.get()
-        $.get('ajax/list.php?keyword=' + $('#keywoard').val(), function(data) {
-
-            $('#list').html(data);
-            $('.loader').hide();
-
-        });
-
+    $('#content').hide();
+    $('#keyword').keyup(function(){
+        $('#content').show();
+        var keyword = $('#keyword').val();
+        if(keyword!='')
+        {
+            $.ajax(
+                {
+                    url: 'ajax/list.php',
+                    method: 'POST',
+                    data:{query:keyword},
+                    success:function(data){
+                        $("#content").html(data);
+                }
+            })
+        }
+        else{
+            $('#content').html('');
+        }
+        $(document).on('click', 'a', function(){
+            $('#keyword').val($(this).text());
+            $('#content').html('');
+        })
     });
-
+    $(document).on('click', '#cari', function(){
+        var value = $('#keyword').val();
+        $.ajax({
+            url: 'ajax/display.php',
+            method: 'POST',
+            data: {keyword:value},
+            success: function(data){
+                $('#list').html(data);
+            }
+        });
+    });
 });

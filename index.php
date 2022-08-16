@@ -4,11 +4,13 @@ session_start();
 if( isset($_SESSION["register"]) ){
     header("Location: activate/"); exit;
 }
-
 require "functions.php";
 if( isset($_GET["kategori"]) ){
     $kategori = $_GET["kategori"];
     $lists = query("SELECT * FROM list WHERE Kategori = '$kategori'");
+}else if( isset($_GET["type"]) ){
+    $type = $_GET["type"];
+    $lists = query("SELECT * FROM list WHERE Type LIKE '$type'");
 }else{
     $lists = query("SELECT * FROM list");
 }
@@ -29,6 +31,7 @@ if( !$lists ){
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
         <link href="css/styles.css" rel="stylesheet" />
+        <script src="js/jquery-3.6.0.min.js"></script>
         <script>
             if (window.history.replaceState) {
                 window.history.replaceState(null, null, window.location.href);
@@ -149,19 +152,19 @@ if( !$lists ){
             <div class="modal-dialog">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="search">Options</h5>
+                    <h5 class="modal-title" id="search">Review</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="text-center">
                         <img src="assets/img/list/<?= $list["Gambar"]; ?>" class="img-top mb-3" alt="<?= $list["Gambar"]; ?>" height="300"/>
                         <h3><?= $list["Type"]; ?></h3><hr/>
-                        <div class="border border-warning rounded start text-secondary mt-5">
-                            <a href="" class="text-warning"><i class="bi bi-star-fill"></i></a>
-                            <a href="" class="text-warning"><i class="bi bi-star-fill"></i></a>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
+                        <div class="start rounded text-secondary mt-5">
+                            <i class="bi bi-star-fill" onclick="window.location.href='?bintang=5'"></i>
+                            <i class="bi bi-star-fill" onclick="window.location.href='?bintang=4'"></i>
+                            <i class="bi bi-star-fill" onclick="window.location.href='?bintang=3'"></i>
+                            <i class="bi bi-star-fill" onclick="window.location.href='?bintang=2'"></i>
+                            <i class="bi bi-star-fill" onclick="window.location.href='?bintang=1'"></i>
                             <h3 class="text-warning">Beri ratting</h3>
                         </div>
                     </div>
@@ -186,7 +189,12 @@ if( !$lists ){
                 </div>
                 <div class="modal-body">
                     <form action="" method="POST">
-                        <input type="text" name="inputKeyword" class="form-control" placeholder="Masukan Type untuk mencari" required="" id="keywoard"/>
+                        <input type="text" name="inputKeyword" class="form-control" placeholder="Masukan Type untuk mencari" id="keyword"/>
+                        <div class="card-body">
+                            <div class="list-group list-group-item-action" id="content">
+                                <a href="#" class="list-group-item-action">List 1</a>
+                            </div>
+                        </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -419,9 +427,17 @@ if( isset($_POST["add"]) ){
     }
 }
 
+
+if( isset($_GET["bintang"]) ){
+    if( !isset($_SESSION["login"]) ){
+        echo "<script>swal('Anda belum login','Silahkan untuk login terlebih dahulu','warning').then(function(){ $('#login').modal('show'); });</script>";
+    }else{
+        mysqli_query($conn, "UPDATE list SET ");
+    }
+}
+
 ?>
 
-        <script src="js/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="js/scripts.js"></script>
         <script src="js/my.js"></script>
