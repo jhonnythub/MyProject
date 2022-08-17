@@ -19,6 +19,8 @@ if( !$lists ){
     $kosong = "Data Masih Kosong";
 }
 
+date_default_timezone_set('Asia/Jakarta'); 
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -160,11 +162,11 @@ if( !$lists ){
                         <img src="assets/img/list/<?= $list["Gambar"]; ?>" class="img-top mb-3" alt="<?= $list["Gambar"]; ?>" height="300"/>
                         <h3><?= $list["Type"]; ?></h3><hr/>
                         <div class="start rounded text-secondary mt-5">
-                            <i class="bi bi-star-fill" onclick="window.location.href='?bintang=5'"></i>
-                            <i class="bi bi-star-fill" onclick="window.location.href='?bintang=4'"></i>
-                            <i class="bi bi-star-fill" onclick="window.location.href='?bintang=3'"></i>
-                            <i class="bi bi-star-fill" onclick="window.location.href='?bintang=2'"></i>
-                            <i class="bi bi-star-fill" onclick="window.location.href='?bintang=1'"></i>
+                            <i class="bi bi-star-fill" onclick="window.location.href='?tipe=<?= $list['Type']; ?>&bintang=5'"></i>
+                            <i class="bi bi-star-fill" onclick="window.location.href='?tipe=<?= $list['Type']; ?>&bintang=4'"></i>
+                            <i class="bi bi-star-fill" onclick="window.location.href='?tipe=<?= $list['Type']; ?>&bintang=3'"></i>
+                            <i class="bi bi-star-fill" onclick="window.location.href='?tipe=<?= $list['Type']; ?>&bintang=2'"></i>
+                            <i class="bi bi-star-fill" onclick="window.location.href='?tipe=<?= $list['Type']; ?>&bintang=1'"></i>
                             <h3 class="text-warning">Beri ratting</h3>
                         </div>
                     </div>
@@ -219,7 +221,7 @@ if( !$lists ){
                         <label>Password</label>
                         <input type="password" name="password" class="form-control" placeholder="Masukan Password" required=""/>
                         <hr/><div class="text-center">
-                            <a href="forgot.php" class="text-decoration-none font-monospace text-center">Lupa Kata Sandi?</a>
+                            <a href="activate/forgot.php" class="text-decoration-none font-monospace text-center">Lupa Kata Sandi?</a>
                         </div>
                 </div>
                     <div class="modal-footer">
@@ -391,9 +393,9 @@ if( isset($_POST["login"]) ){
                   });
                 </script>"; exit;
             }else{
-                date_default_timezone_set('Asia/Jakarta'); $date = date("Y-m-d H:i:s");
+                $date = date("Y-m-d H:i:s");
                 mysqli_query($conn, "UPDATE log_user SET lastLog = '$date' WHERE Username = '$username'");
-                $_SESSION["id"] = $nama["ID"]; $_SESSION["nama"] = $nama["Nama"]; $_SESSION["AS"] = $nama["setAs"]; $_SESSION["login"] = true;
+                $_SESSION["id"] = $nama["ID"]; $_SESSION["nama"] = $nama["Nama"]; $_SESSION["username"] = $nama["Username"]; $_SESSION["AS"] = $nama["setAs"]; $_SESSION["login"] = true;
                 echo "<script>swal('Login berhasil dilakukan','berhasil','success').then(function(){
                     window.location.href = '/myproject';
                 });
@@ -429,11 +431,26 @@ if( isset($_POST["add"]) ){
 
 
 if( isset($_GET["bintang"]) ){
+    $type = $_GET["tipe"];
+    $username = $_SESSION["username"];
+    $rating = $_GET["bintang"];
+    $date = date("Y-m-d H:i:s");
     if( !isset($_SESSION["login"]) ){
         echo "<script>swal('Anda belum login','Silahkan untuk login terlebih dahulu','warning').then(function(){ $('#login').modal('show'); });</script>";
     }else{
-        mysqli_query($conn, "UPDATE list SET ");
+        $num = mysqli_query($conn, "SELECT * FROM rating WHERE Type = '$type' AND Akun = '$username'");
+        if( mysqli_num_rows($num) ){
+            echo "<script>swal('Anda sudah berkontribusi atas produk ini','terima0kasih','warning').then(function(){ window.location.href = '/myproject/'; });</script>"; return false;
+        }else{
+            mysqli_query($conn, "INSERT INTO rating VALUES('','$type','$username','$rating','$date')");
+            echo "<script>swal('Rating diberikan','terimakasih atas kontribusi Anda','success').then(function(){ window.location.href = '/myproject/'; });</script>";
+        }
     }
+}
+
+
+if( isset($_GET["haveAccount"]) ){
+    echo "<script>swal('Silahkan daftar menggunakan email', 'daftar', 'warning').then(function(){ $('#register').modal('show'); });</script>";
 }
 
 ?>
