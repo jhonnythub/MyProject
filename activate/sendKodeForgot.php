@@ -1,6 +1,6 @@
 <?php
 session_start();
-if( !isset($_SESSION["register"]) ){
+if( !isset($_SESSION["forgot"]) ){
     header("Location: ../"); exit;
 }
 
@@ -11,16 +11,17 @@ include('phpmailer/Exception.php');
 include('phpmailer/PHPMailer.php');
 include('phpmailer/SMTP.php');
 require "../functions.php";
-$nama = $_SESSION["nama"];
-$table = mysqli_query($conn, "SELECT * FROM log_user WHERE Nama = '$nama'");
+$email = $_SESSION["email"];
+$table = mysqli_query($conn, "SELECT * FROM log_user WHERE Email = '$email'");
 $fetch = mysqli_fetch_assoc($table);
+$nama = $fetch["Nama"];
 $kode = $fetch["kode_OTP"];
 $email_pengirim = 'apoygeboy368@gmail.com'; 
 $nama_pengirim = 'CRUD Sederhana';
 $to = $fetch["Email"];
-$subjek = "Pendaftaran CRUD Sederhana"; 
-$judul = "Kode OTP Untuk Pendaftaran";
-$pesan = "Hallo <i style='color: red;'>".$nama."</i>, Gunakan Kode OTP berikut untuk menyelesaikan Pendaftaran";
+$subjek = "Lupa Kata Sandi"; 
+$judul = "Kode OTP Untuk Lupa Kata Sandi";
+$pesan = "Hallo <i style='color: red;'>".$nama."</i>, Gunakan Kode OTP berikut untuk mereset kata sandi";
 $otp = $kode;
 $mail = new PHPMailer;
 $mail->isSMTP();
@@ -41,5 +42,4 @@ ob_start();
     $mail->Subject = $subjek;
     $mail->Body = $content;
     $mail->send();
-    header("Location: /MyProject/activate/"); exit;
-?>
+header("Location: forgot.php");

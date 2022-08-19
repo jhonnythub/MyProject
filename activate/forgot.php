@@ -1,3 +1,8 @@
+<?php
+session_start();
+
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -30,26 +35,20 @@
         </div>
     </div>
 
-    <div class="modal fade" id="register" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="register" aria-hidden="true">
-            <div class="modal-dialog">
+    <div class="modal fade" id="forgot" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="forgot" aria-hidden="true">
+            <div class="modal-dialog text-center">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="login">Daftar</h5>
+                    <h5 class="modal-title" id="forgot">Authentikasi</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                  <p>Kami telah mengirimi kode Authentikasi ke Email Anda, Silahkan masukan kode di form yang disediakan!</p>
                     <form action="" method="POST">
-                        <label>Nama Lengkap</label>
-                        <input type="text" name="nama" class="form-control" placeholder="Masukan Nama Lengkap" required=""/>
-                        <label>Email</label>
-                        <input type="email" name="email" class="form-control" placeholder="Masukan email" required=""/>
-                        <label>Password</label>
-                        <input type="password" name="pass1" class="form-control" placeholder="Masukan Password" required=""/>
-                        <label>Konfirmasi Password</label>
-                        <input type="password" name="pass2" class="form-control" placeholder="Konfirmasi Password" required=""/>
+                        <input type="text" name="kodeOTP" class="form-control text-center" placeholder="######" required=""/>
                 </div>
                     <div class="text-center mb-3">
-                            <button type="submit" name="daftar" class="btn btn-outline-success">Daftar</button>
+                            <button type="submit" name="sendCode" class="btn btn-primary">Kirim</button>
                     </form>
                     </div>
                 </div>
@@ -62,10 +61,29 @@ if( isset($_POST["sendEmail"]) ){
     $email = $_POST["email"];
     $take = mysqli_query($conn, "SELECT * FROM log_user WHERE Email = '$email'");
     if( !mysqli_num_rows($take) ){
-        echo "<script>alert('email tidak ditemukan');</script>";
+        echo "<script>alert('email tidak ditemukan'); window.location.href = '/myproject?haveAccount=isset';</script>";
     }else{
-        echo "<script>swal('Silahkan Masukan kode authentikasi', '6 digit', 'success').then(function(){ $('#register').modal('show'); });</script>";
+        $angka = rand(111111,999999);
+        $_SESSION["email"] = $email; $_SESSION["forgot"] = true;
+        mysqli_query($conn, "UPDATE log_user SET kode_OTP = '$angka' WHERE Email = '$email'");
+        header("Location: sendKodeForgot.php"); exit;
     }
+}
+
+if( isset($_SESSION["forgot"]) ){
+  echo "<script>swal('Silahkan Masukan kode Authentikasi', '6 digit', 'success').then(function(){ $('#forgot').modal('show'); });</script>";
+}
+
+if( isset($_POST["sendCode"]) ){
+  $email = $_SESSION["email"];
+  $database = mysqli_query($conn, "SELECT * FROM log_user WHERE Email = '$email'");
+  $cangkang = mysqli_fetch_assoc($database);
+  if( $_POST["kodeOTP"] === $cangkang["kode_OTP"] ){
+    $_SESSION["username"] = $cangkang["Username"]; $_SESSION["setPassword"] = true;
+    header("Location: setPassword.php"); exit;
+  }else{
+    echo "<script>window.location.href = '/myproject/activate/forgot.php';</script>";
+  }
 }
 
 ?>

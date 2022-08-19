@@ -19,6 +19,7 @@ if( !$lists ){
     $kosong = "Data Masih Kosong";
 }
 
+
 date_default_timezone_set('Asia/Jakarta'); 
 
 ?>
@@ -83,11 +84,11 @@ date_default_timezone_set('Asia/Jakarta');
                         <li class="nav-item"><a class="nav-link" href="#" data-bs-target="#about" data-bs-toggle="modal">About</a></li>
                     </ul>
                     <?php if( isset($_SESSION["login"]) ) { ?>
-                        <?php if( $_SESSION["AS"] === "Admin" ) { ?>
+                        <?php if( isset($_SESSION["AS"]) ){ if( $_SESSION["AS"] === "Admin" ) { ?>
                         <button class="btn btn-outline-primary me-3" type="button" data-bs-target="#addData" data-bs-toggle="modal">
                             Tambahakan Data <i class="bi bi-plus-circle"></i>
                         </button>
-                        <?php } ?>
+                        <?php } } ?>
                         <button class="btn btn-outline-success" type="button" data-bs-target="#modal<?= $_SESSION["id"]; ?>" data-bs-toggle="modal">
                             <i class="bi bi-person-circle"></i> <?= $_SESSION["nama"]; ?>
                         </button>
@@ -386,7 +387,7 @@ if( isset($_POST["login"]) ){
         if( password_verify($password, $takePass["Password"]) ){
             $user = $_POST["username"]; $log_user = mysqli_query($conn, "SELECT * FROM log_user WHERE Username = '$user'"); $nama = mysqli_fetch_assoc($log_user);
             if( $nama["Aktivasi"] === "Belum Aktivasi" ){
-                $_SESSION["nama"] = $nama["Nama"]; $_SESSION["register"] = true;
+                $_SESSION["AS"] = $nama["setAs"];$_SESSION["nama"] = $nama["Nama"]; $_SESSION["register"] = true;
                 echo "<script type='text/javascript'>
                 swal('Akun Anda Belum terverifikasi', 'Silahkan Lakukan Verifikasi!', 'warning').then(function(){
                     window.location.href = '/myproject/activate/';

@@ -11,7 +11,7 @@ global $conn;
     $pass1 = mysqli_real_escape_string($conn, $data["pass1"]);
     $pass2 = mysqli_real_escape_string($conn, $data["pass2"]);
     $angka = rand(111111,999999);
-    $result = mysqli_query($conn, "SELECT * FROM register WHERE Nama = '$nama' OR Email = '$email'");
+    $result = mysqli_query($conn, "SELECT * FROM log_user WHERE Nama = '$nama' OR Email = '$email'");
     date_default_timezone_set('Asia/Jakarta'); $date = date("Y-m-d H:i:s");
     if( mysqli_num_rows($result) === 1 ){
         echo "<script>swal('Nama atau email tersebut sudah terdaftar','Silahkan gunakan yang lain', 'warning');</script>"; return false;
