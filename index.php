@@ -93,13 +93,13 @@ date_default_timezone_set('Asia/Jakarta');
                             <i class="bi bi-person-circle"></i> <?= $_SESSION["nama"]; ?>
                         </button>
                     <?php }else { ?>
-                    <form class="d-flex">
+                    <div class="d-flex">
                         <button class="btn btn-outline-dark" type="button" data-bs-target="#login" data-bs-toggle="modal">
                             <i class="bi bi-person-circle"></i>
                             Login
                             <span class="badge bg-dark text-white ms-1 rounded-pill">NO</span>
                         </button>
-                    </form>
+                    </div>
                     <?php } ?>
                 </div>
             </div>
@@ -133,8 +133,8 @@ date_default_timezone_set('Asia/Jakarta');
                                 <div class="text-center">
                                     <!-- Product name-->
                                     <h5 class="fw-bolder"><?= $list["Type"]?></h5>
-                                <?php if( isset($_SESSION["login"]) ){ ?>
-                                    Rp. <?= $list["Harga"]; ?>
+                                <?php if( isset($_SESSION["login"]) ){ $harga = $list["Harga"]; $rupiah = number_format($harga,0,',','.'); ?>
+                                    Rp. <?= $rupiah; ?>
                                 <?php } ?>
                                 </div>
                             </div>
@@ -211,22 +211,28 @@ date_default_timezone_set('Asia/Jakarta');
         <div class="modal fade" id="login" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="login" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="login">Login</h5>
+                <div class="modal-header" style="background-color: #FDF5E6;">
+                    <h5 class="modal-title" id="login">Masuk</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="POST">
-                        <label>Username</label>
-                        <input type="text" name="username" class="form-control" placeholder="Masukan Username" required=""/>
-                        <label>Password</label>
-                        <input type="password" name="password" class="form-control" placeholder="Masukan Password" required=""/>
+                    <h1 class="text-center" style="font-size: 100px; color: #008000;"><i class="bi bi-person-check-fill"></i></h1>
+                    <form action="" method="POST" class="text-center">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-transparent text-success" id="username" for="username"><i class="bi bi-person"></i> </span>
+                            <input type="text" name="username" class="form-control" placeholder="Username atau Nama" required="" id="username"/>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-transparent text-success"><i class="bi bi-shield-lock"></i></span>
+                            <input type="password" name="password" class="form-control" placeholder="Password" required="" id="pass"/>
+                            <span class="input-group-text bg-transparent" id="show" onclick="show()" tabindex="0"><i class="bi bi-eye"></i></span>
+                        </div>
                         <hr/><div class="text-center">
                             <a href="activate/forgot.php" class="text-decoration-none font-monospace text-center">Lupa Kata Sandi?</a>
                         </div>
                 </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-info" data-bs-target="#register" data-bs-toggle="modal">Daftar</button>
+                        <button type="button" class="btn btn-outline-danger" data-bs-target="#register" data-bs-toggle="modal">Daftar</button>
                         <button type="submit" name="login" class="btn btn-outline-success">Login</button>
                     </form>
                     </div>
@@ -237,29 +243,61 @@ date_default_timezone_set('Asia/Jakarta');
         <div class="modal fade" id="register" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="register" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header text-white" style="background-color: #008000;">
                     <h5 class="modal-title" id="login">Daftar</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <h1 class="text-center mb-3" style="font-size: 100px;"><i class="bi bi-file-earmark-text fw-bold"></i></h1>
                     <form action="" method="POST">
-                        <label>Nama Lengkap</label>
-                        <input type="text" name="nama" class="form-control" placeholder="Masukan Nama Lengkap" required=""/>
-                        <label>Email</label>
-                        <input type="email" name="email" class="form-control" placeholder="Masukan email" required=""/>
-                        <label>Password</label>
-                        <input type="password" name="pass1" class="form-control" placeholder="Masukan Password" required=""/>
-                        <label>Konfirmasi Password</label>
-                        <input type="password" name="pass2" class="form-control" placeholder="Konfirmasi Password" required=""/>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-transparent"><i class="bi bi-person-circle"></i></span>
+                            <input type="text" name="nama" class="form-control" placeholder="Masukan Nama Lengkap" required=""/>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-transparent"><i class="bi bi-envelope"></i></span>
+                            <input type="email" name="email" class="form-control" placeholder="Masukan email" required=""/>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-transparent"><i class="bi bi-key"></i></span>
+                            <input type="password" name="pass1" id="pass1" class="form-control" placeholder="Masukan Password" required=""/>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-transparent"><i class="bi bi-key-fill"></i></span>
+                            <input type="password" name="pass2" id="pass2" class="form-control" placeholder="Konfirmasi Password" required=""/>
+                            <span class="input-group-text bg-transparent" id="show1" onclick="show()" tabindex="0"><i class="bi bi-eye"></i></span>
+                        </div>
                 </div>
                     <div class="text-center mb-3">
-                            <button type="submit" name="daftar" class="btn btn-outline-success">Daftar</button>
+                            <button type="submit" name="daftar" class="btn btn-success">Daftar</button>
+                            <button type="button" class="btn btn-danger" data-bs-target="#login" data-bs-toggle="modal">Login</button>
                     </form>
                     </div>
                 </div>
             </div>
         </div>
 
+<script>
+    function show(){
+        var x = document.getElementById('pass').type;
+        var y = document.getElementById('pass1').type;
+        var z = document.getElementById('pass2').type;
+        if( x == 'password' || y == 'password' || z == 'password' ){
+            document.getElementById('pass').type = 'text';
+            document.getElementById('pass1').type = 'text';
+            document.getElementById('pass2').type = 'text';
+            document.getElementById('show').innerHTML = '<i class="bi bi-eye-slash"></i>';
+            document.getElementById('show1').innerHTML = '<i class="bi bi-eye-slash"></i>';
+        }else{
+            document.getElementById('pass').type = 'password';
+            document.getElementById('pass1').type = 'password';
+            document.getElementById('pass2').type = 'password';
+            document.getElementById('show').innerHTML = '<i class="bi bi-eye"></i>';
+            document.getElementById('show1').innerHTML = '<i class="bi bi-eye"></i>';
+        }
+    }
+</script>
+                
 <?php if( isset($_SESSION["login"]) ) { ?>
     
         <div class="modal fade" id="modal<?= $_SESSION["id"]; ?>" tabindex="-1" aria-labelledby="logUser" aria-hidden="true">
@@ -273,7 +311,9 @@ date_default_timezone_set('Asia/Jakarta');
                     <div class="text-center">
                         <img src="assets/img/jhonny.png" alt="<?= $_SESSION["nama"]; ?>" class="rounded-circle"/ width="100">
                         <h3><?= $_SESSION["nama"]; ?></h3>
+                        <?php if( $_SESSION["AS"] === "Admin" ){ ?>
                         <button type="button" class="btn btn-primary" data-bs-target="#addData" data-bs-toggle="modal">Tambahkan Data <i class="bi bi-plus-circle"></i></button>
+                        <?php } ?>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -380,12 +420,12 @@ date_default_timezone_set('Asia/Jakarta');
 
 if( isset($_POST["login"]) ){
     $username = htmlspecialchars($_POST["username"]);
-    $takeUser = mysqli_query($conn, "SELECT * FROM log_user WHERE Username = '$username'");
+    $takeUser = mysqli_query($conn, "SELECT * FROM log_user WHERE Username = '$username' OR Nama = '$username'");
     if( mysqli_num_rows($takeUser) === 1 ){
         $password = htmlspecialchars($_POST["password"]);
         $takePass = mysqli_fetch_assoc($takeUser);
         if( password_verify($password, $takePass["Password"]) ){
-            $user = $_POST["username"]; $log_user = mysqli_query($conn, "SELECT * FROM log_user WHERE Username = '$user'"); $nama = mysqli_fetch_assoc($log_user);
+            $user = $_POST["username"]; $log_user = mysqli_query($conn, "SELECT * FROM log_user WHERE Username = '$user' OR Nama = '$user'"); $nama = mysqli_fetch_assoc($log_user);
             if( $nama["Aktivasi"] === "Belum Aktivasi" ){
                 $_SESSION["AS"] = $nama["setAs"];$_SESSION["nama"] = $nama["Nama"]; $_SESSION["register"] = true;
                 echo "<script type='text/javascript'>

@@ -10,7 +10,8 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Page Activate | Jhonny Iskandar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
     <script>
             if (window.history.replaceState) {
                 window.history.replaceState(null, null, window.location.href);
@@ -23,12 +24,16 @@ session_start();
     <div class="container text-center mt-5 font-monospace">
         <div class="card p-4">
           <h2 class="mb-3">Masukan Email Anda</h2>
-          <p class="mb-3">Silahkan!<i class="text-danger fw-bolder"></i>, Masukan Alamt email pemulihan Anda</p>
+          <p style="font-size: 100px;"><i class="bi bi-envelope-fill"></i></p>
+          <p class="mb-3">Silahkan!<i class="text-danger fw-bolder"></i>, Masukan Alamat email pemulihan Anda</p>
             <form action="" method="POST" class="mb-3">
-                <input type="email" name="email" class="form-control mb-3 text-center" placeholder="example@gmail.com" required/>
-                <div class="d-grid gap-2 col-6 mx-auto">
-                  <button class="btn btn-primary" name="sendEmail" type="submit">Kirim</button>
-                </div>
+              <div class="input-group mb-3">
+                <span class="input-group-text bg-transparent"><i class="bi bi-envelope"></i></span>
+                <input type="email" name="email" class="form-control text-center" placeholder="example@gmail.com" required/>
+              </div>
+              <div class="d-grid gap-2 col-6 mx-auto">
+                <button class="btn btn-primary" name="sendEmail" type="submit">Kirim</button>
+              </div>
             </form>
           <hr>
           <p class="fst-italic"><a href="/myproject?haveAccount=isset">Tidak memiliki Akun?</a></p>
@@ -45,7 +50,10 @@ session_start();
                 <div class="modal-body">
                   <p>Kami telah mengirimi kode Authentikasi ke Email Anda, Silahkan masukan kode di form yang disediakan!</p>
                     <form action="" method="POST">
+                      <div class="input-group">
+                        <span class="input-group-text bg-transparent"></span>
                         <input type="text" name="kodeOTP" class="form-control text-center" placeholder="######" required=""/>
+                      </div>
                 </div>
                     <div class="text-center mb-3">
                             <button type="submit" name="sendCode" class="btn btn-primary">Kirim</button>

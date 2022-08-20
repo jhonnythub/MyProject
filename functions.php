@@ -7,14 +7,14 @@ function register($data){
 global $conn;
     $nama = htmlspecialchars(ucwords($data["nama"]));
     $email = htmlspecialchars($data["email"]);
-    $username = str_replace(' ','.',$nama);
+    $username = strtolower(str_replace(' ','.',$nama));
     $pass1 = mysqli_real_escape_string($conn, $data["pass1"]);
     $pass2 = mysqli_real_escape_string($conn, $data["pass2"]);
     $angka = rand(111111,999999);
-    $result = mysqli_query($conn, "SELECT * FROM log_user WHERE Nama = '$nama' OR Email = '$email'");
+    $result = mysqli_query($conn, "SELECT * FROM log_user WHERE Email = '$email'");
     date_default_timezone_set('Asia/Jakarta'); $date = date("Y-m-d H:i:s");
     if( mysqli_num_rows($result) === 1 ){
-        echo "<script>swal('Nama atau email tersebut sudah terdaftar','Silahkan gunakan yang lain', 'warning');</script>"; return false;
+        echo "<script>swal('Email tersebut sudah terdaftar','Silahkan gunakan yang lain', 'warning');</script>"; return false;
     }else if( $pass1 !== $pass2 ){
         echo "<script>alert('Password tidak sama');</script>"; return false;
     }else{
